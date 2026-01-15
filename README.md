@@ -13,7 +13,7 @@
 
 <h2>✒️ Recent Posts</h2>
 <ul>
-<li><a target="_blank" href="https://portofolio-raden-psi.vercel.app/">My Portofolio</a></li>
+<li><a target="_blank" href="https://raden-rizky.vercel.app/">My Portofolio</a></li>
 
 # 📊 GitHub Stats:
 ![](https://github-readme-stats.vercel.app/api?username=RadenRizky26&theme=dark&hide_border=false&include_all_commits=true&count_private=true)<br/>
