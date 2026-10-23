@@ -2,7 +2,7 @@ name: Generate trophy card
 
 on:
   schedule: # execute every 12 hours
-    - cron: "* */12 * * *"
+    - cron: "0 */12 * * *"
 
   workflow_dispatch:
 
@@ -19,17 +19,22 @@ jobs:
 
     steps:
       - name: generate trophy.svg
-        uses: Erik-Donath/github-profile-trophy@feature/generate-svg
-        with:
-          username: ${{ github.repository_owner }}
-          file: dist/trophy.svg
-          token: ${{ secrets.GITHUB_TOKEN }}
-          theme: dracula
-          max-rows: 1
-          margin-width: 8
-          margin-height: 8
-          no-background: false
-          no-frame: false
+        run: |
+          mkdir -p dist
+          URLS=(
+            "https://github-profile-trophy-unserori.vercel.app/?username=${{ github.repository_owner }}&theme=dracula&row=1&column=-1&margin-w=8&margin-h=8&no-bg=false&no-frame=false"
+            "https://github-trophies.devomb.com/?username=${{ github.repository_owner }}&theme=dracula&row=1&column=-1&margin-w=8&margin-h=8&no-bg=false&no-frame=false"
+            "https://trophy.ryglcloud.net/?username=${{ github.repository_owner }}&theme=dracula&row=1&column=-1&margin-w=8&margin-h=8&no-bg=false&no-frame=false"
+          )
+          for url in "${URLS[@]}"; do
+            echo "Attempting to generate trophy from $url..."
+            if curl -f -sL "$url" -o dist/trophy.svg && [ -s dist/trophy.svg ] && grep -q "<svg" dist/trophy.svg; then
+              echo "Successfully generated dist/trophy.svg"
+              exit 0
+            fi
+          done
+          echo "Error: Failed to generate trophy SVG from all available endpoints."
+          exit 1
 
       - name: push trophy.svg to the output branch
         uses: crazy-max/ghaction-github-pages@v3.1.0
